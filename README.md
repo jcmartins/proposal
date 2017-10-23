@@ -1,0 +1,2 @@
+# proposal
+Sensu Design Documents
