@@ -26,6 +26,11 @@ to be evaluated with event data. The statements are AND'd. Filters will be imple
 
 ## Proposal
 
+We propose implementing a somewhat modified version of Sensu 1.x filters that makes the
+behavior of the filter and the expression of the filter's intent more straightforward.
+This proposal does not include the Sensu 1.x filter "when" functionality (i.e. time-based
+filter is out of scope for this issue).
+
 ### Filter Type
 
 Sensu 1.x filters are configured as follows:
@@ -92,13 +97,19 @@ Go does not have this "luxury", and so we are introducing two mechanisms for rep
 functionality similar to that which is available in Sensu 1.x. Sensu 2 filters will have
 a list of statements which are logically AND'd together after individual evaluation.
 These statements contain tokens and operators as provided by the [govaluate](https://github.com/Knetic/govaluate) 
-library. 
+library.
 
-In this sense, tokens are any dot-notated Sensu Event attribute. For example `event.check.state == "passing"`
+Sensu 2.x filter statements must evaluate to boolean expressions. This means that they
+require a boolean operator in the expression. Sensu 1.x allowed "truthiness" to determine if
+the filter matched. For example, the _existence_ of a field would be enough for it to to match.
+In Sensu 2.x, you would have to explicitly do a type-appropriate comparison against the field's
+zero-value. For example, if you wanted to make sure the check had _some_ output, you would use
+the statement `event.Check.Output != ""`.
+
+In this sense, tokens are any dot-notated Sensu Event attribute. For example `event.Check.State == "passing"`
 would first access the event's check object and retrieve the state of the check, then do an equality
 comparison to the string "passing". Govaluate provides us the ability to easily parse
-these statements and access tokens for substitution.
-
+these statements and provides access to the event structure when we pass it in as a parameter.
 
 ## Rationale
 
@@ -183,11 +194,70 @@ Filters should be namespaced in etcd using a key builder within the "filters" pa
 
 ### Pipelined
 
+When an event comes through the pipeline, load its associated filter(s) from Etcd and
+create "machines" that take as input the event and return whether or not that event
+should be passed through to the next pipeline "stage." We can add caching for reuse later, 
+but for now let's accept the GC pressure rather than having to worry about the complexity 
+introduced by cache coherency.
 
+A filter machine applies one or more filter statements (respresented by govaluate
+`EvaluableExpression`s) to an event. These statements may include references to fields on the Event
+structure in dot-notation. Govaluate provides access to struct fields and methods, see its
+documentation on [accessors](https://github.com/knetic/govaluate#accessors) for more information.
+
+When a machine receives an event, it will pass the event along to each govaluate `EvaluableExpression`
+as a parameter, making it accessible to the filter statement.
+
+Concretely:
+
+```golang
+  expr, err := govaluate.NewEvaluableExpression(`event.Check.Environment == "production"`)
+  // handle err
+  
+  result, err := expr.Evaluate(map[string]interface{}{"event": event})
+  // handle err
+
+  match, ok := result.(bool)
+  // if !ok, then we should consider that an error, filter expressions
+  // must evaluate to boolean values.
+  
+  // if match && filter.action == allow, don't filter the event, and vice versa
+```
 
 ### 1.x -> 2.x translation
 
-## Open issues (if applicable)
+While we understand it will be a tedious operation, we want to make sure that we provide
+an automated import of Sensu 1.x filters into 2.x filters whenever possible. Sensu 1.x 
+filters allow you to easily create filters that inspect event attributes by representing
+those comparisons as a hash value for the filter's `attributes` field. We should map those
+to Sensu 2.x filter expressions whenever possible.
 
-[A discussion of issues relating to this proposal for which the author does not
-know the solution. This section may be omitted if there are none.]
+For example, client attribute filters would map to entity comparisons.
+
+```json
+{
+  "attributes": {
+    "client": {
+      "environment": "production"
+    }
+  }
+}
+```
+
+Becomes:
+
+```json
+{
+  "statements": [
+    "event.Entity.Environment == \"production\""
+  ],
+  "action": "allow"
+}
+```
+
+The missing `negate` field in the original filter would become an implicit `allow` action in
+Sensu 2.x.
+
+Not all Client or Check fields will be directly mappable. Some of these will be custom
+attributes that people set on objects, but those will be dealt with at a later time in
+a separate feature. We should reject any filter that uses eval for now.
