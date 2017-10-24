@@ -29,7 +29,7 @@ to be evaluated with event data. The statements are AND'd. Filters will be imple
 We propose implementing a somewhat modified version of Sensu 1.x filters that makes the
 behavior of the filter and the expression of the filter's intent more straightforward.
 This proposal does not include the Sensu 1.x filter "when" functionality (i.e. time-based
-filter is out of scope for this issue).
+filtering is out of scope for this issue).
 
 ### Filter Type
 
@@ -51,24 +51,16 @@ In contrast, 2.x filters have an `action` field that specifically states `allow`
 
 Filters in Sensu 2.x look like this:
 
-```golang
-type EventFilter struct {
-  // Name is a unique identifier for the filter.
-  Name string `json:"name"`
-
-  // Organization is the organization to which this filter belongs
-  Organization string `json:"organization"`
-
-  // Environment is the environment to which this filter belongs.
-  Environment string `json:"environment"`
-
-  // Statements is an array of boolean expressions that are &&'d together
-  // to determine if the event matches this filter.
-  Statements []string `json:"statements"`
-  
-  // Action is one of "allow" or "deny" and specifies whether events are passed
-  // through the filter or blocked by the filter.
-  Action string `json:"action"`
+```json
+{
+  "name": "filter name",
+  "organization": "org name",
+  "environment": "env name",
+  "statements": [
+    "event.Check.Status == \"passing\"",
+    "event.Check.Occurrences == 1"
+  ],
+  "action": "allow"
 }
 ```
 
@@ -93,14 +85,13 @@ DELETE /filters/:name - Delete a single, named filter.
 In Sensu 1.x, if an attribute began with `eval:`, Ruby would `eval()` the following
 statement and return a value which was used to determine if the attribute matched.
 
-Go does not have this "luxury", and so we are introducing two mechanisms for replicating
-functionality similar to that which is available in Sensu 1.x. Sensu 2 filters will have
-a list of statements which are logically AND'd together after individual evaluation.
-These statements contain tokens and operators as provided by the [govaluate](https://github.com/Knetic/govaluate) 
-library.
+Since Go lacks eval(), we will implement functionality similar to that which is available 
+in Sensu 1.x. Sensu 2 filters will have a list of statements which are logically AND'd 
+together after individual evaluation. These statements contain tokens and operators as 
+provided by the [govaluate](https://github.com/Knetic/govaluate) library. As soon as one
+comparison fails, we can bail and conculde this filter does not apply to the event.
 
-Sensu 2.x filter statements must evaluate to boolean expressions. This means that they
-require a boolean operator in the expression. Sensu 1.x allowed "truthiness" to determine if
+Sensu 2.x filter statements must be boolean expressions. Sensu 1.x allowed "truthiness" to determine if
 the filter matched. For example, the _existence_ of a field would be enough for it to to match.
 In Sensu 2.x, you would have to explicitly do a type-appropriate comparison against the field's
 zero-value. For example, if you wanted to make sure the check had _some_ output, you would use
@@ -116,7 +107,7 @@ these statements and provides access to the event structure when we pass it in a
 ### Backward compatible options
 
 There are two mechanisms for providing backward compatibility. A separate running Ruby VM that we communicate
-with over sockets or an embedded Ruby VM within Sensu 2.x. We, hilariously, actually have these options! There 
+with over sockets or an embedded Ruby VM within Sensu 2.x. There 
 exist libraries for embedding Ruby VMs in Go (see: https://github.com/AlekSi/gomruby).
 
 These are obviously untenable. A separate Ruby VM is operational and packaging complexity we are unwilling
@@ -125,12 +116,10 @@ to introduce, and an embedded Ruby VM is out of the question.
 ### Not backward compatible options
 
 We could introduce Runtime `eval` into Go using a library like [apaxa-go/eval](https://github.com/apaxa-go/eval).
-However, we don't believe that forcing users to learn Golang's syntax or exposing raw Go structs to users is a 
-good user experience.
-
-There's a decent amount of common ground between govaluate and Ruby eval that allows people to compose fairly
-sophisticated boolean expressions to allow or deny events based on them. Furthermore, we can introduce more
-complex functionality into the filter statements at a later time.
+However, evaluating arbitary code is a non-starter. There's a decent amount of common ground between govaluate 
+and Ruby eval that allows people to compose fairly sophisticated boolean expressions to allow or deny events 
+based on them. Govaluate also provides the ability to allow function execution lending itself to more functionality
+later.
 
 ## Compatibility
 
@@ -194,9 +183,9 @@ Filters should be namespaced in etcd using a key builder within the "filters" pa
 
 ### Pipelined
 
-When an event comes through the pipeline, load its associated filter(s) from Etcd and
-create "machines" that take as input the event and return whether or not that event
-should be passed through to the next pipeline "stage." We can add caching for reuse later, 
+When an event comes through the pipeline, load its associated filter(s) and create govaluate
+`EvaluableExpressions` from them. Then call their Eval() method. If the Eval() method returns
+true, continue, else the filter doesn't match. We can add caching for reuse later, 
 but for now let's accept the GC pressure rather than having to worry about the complexity 
 introduced by cache coherency.
 
