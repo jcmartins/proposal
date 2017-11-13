@@ -16,8 +16,8 @@ processing an event in the backend and store them so they can be easily queried.
 
 Sensu v1 currently logs most backend event errors into its log files. While this
 approach is required and useful in some cases, the user experience could be
-improved, especially when running fairly large clusters (e.g. an operator have
-to determine which machine processed a specific event, log into that machine
+improved, especially when running fairly large clusters (e.g. an operator has
+to determine which machine processed a specific event, login that machine
 using SSH and analyze the log files to retrieve the corresponding entries).
 
 ## Proposal
@@ -77,7 +77,7 @@ entity & check
 - `DELETE /errors/:entity/:check` deletes all errors for a given entity and check
 - `DELETE /errors/:entity/:check/:timestamp` deletes a specific error
 
-Adding and updating errors is not be possible through the API, since it's
+Adding and updating errors is not possible through the API, since it's
 reserved to the backend processes. That being said, it could always be possible
 to allow agents to add errors to the Store if required.
 
@@ -128,14 +128,14 @@ the lines of:
 
 **Advantages**
 
-- Any error encountered is right in your face when looking at an event
+- Any error encountered is right in your face when looking at an event.
 
 **Disadvantages**
 
-- We only keep the last event, so we would need to create mutate the event every
- time we receive a new one in order to keep an history of past events
+- We only keep the last event, so we would need to mutate the event every
+ time we receive a new one in order to keep an history of past events.
 - Difficult to aggregate in order to get a better picture of the situation
-(e.g. happen consistently across all events)
+(e.g. happen consistently across all events).
 - It would require synchronization between eventd and pipelined via a mutex in
 etcd.
 
