@@ -1,4 +1,4 @@
-# Proposal: Sensu Backend Errors Storage
+# Proposal: Sensu Backend Events Errors Storage
 
 Author(s): Simon Plourde
 
@@ -147,8 +147,13 @@ This is a new feature in Sensu v2.
 
 In order, here's the user stories required for this feature:
 
-1. Add the error type (see [details](#error-type))
-2. Add the error Store (see [details](#store))
-3. Add the error API (see [details](#api))
-4. Add the error CLI command (see [details](#error-cli))
-5. Update the `event info` subcommand (see [details](#event-cli))
+1. Add the error type (see [details](#error-type)):
+https://github.com/sensu/sensu-go/issues/551
+2. Add the error Store (see [details](#store)):
+https://github.com/sensu/sensu-go/issues/552
+3. Add the error API (see [details](#api)):
+https://github.com/sensu/sensu-go/issues/553
+4. Add the error CLI command (see [details](#error-cli)):
+https://github.com/sensu/sensu-go/issues/554
+5. Update the `event info` subcommand (see [details](#event-cli)):
+https://github.com/sensu/sensu-go/issues/555
