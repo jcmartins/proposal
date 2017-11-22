@@ -73,12 +73,13 @@ TODO:
 The problem with govaluate is that it does not allow accessing nested maps or
 `Parameters` types. There are two potential ways we can solve this issue:
 
-1. Fork and fix govaluate.
+1. Fork and fix govaluate. (PR: https://github.com/Knetic/govaluate/pull/84)
 1. Dynamically generate structs from JSON using reflect.
 
 Both solutions will necessitate reflection, and forking govaluate will incur
 additional maintenance overhead, especially if we don't manage to get it merged
-into mainline.
+into mainline. Dynamically generating structs works, but forces our users to
+use CamelCase names in order to satisfy the govaluate parser.
 
 ## Rationale
 
