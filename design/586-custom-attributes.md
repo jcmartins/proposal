@@ -1,4 +1,4 @@
-# Proposal: Sensu Custom Attributes
+# Proposal: Sensu Extended Attributes
 
 Author(s): Eric Chlebek
 
@@ -8,16 +8,22 @@ Discussion at https://github.com/sensu/sensu-go/issues/586
 
 ## Abstract
 
-Allow users to set custom attributes on selected entities in Sensu, and
+Allow users to set extended attributes on selected entities in Sensu, and
 reference these entities in filters and mutators.
+
+This proposal uses the word "extended" instead of "custom". This is part of
+the proposal, to change the wording. This way, we can indicate to customers
+that we support the essential feature they want from 1.x, but in a  different
+way.
+
 
 ## Background
 
-Custom attributes will necessarily involve dynamic behaviour and reflection,
+Extended attributes will necessarily involve dynamic behaviour and reflection,
 by their nature. Luckily, we can leverage some existing libraries to take the
 burden of maintaining piles of reflection away from us.
 
-In Sensu 1.x, existing custom attributes look like the following:
+In Sensu 1.x, existing _custom_ attributes look like the following:
 ```
 {
   "checks": {
@@ -34,8 +40,8 @@ In Sensu 1.x, existing custom attributes look like the following:
 ```
 
 Notice the 'playbook' field, which is not normally described by the check data
-structure. Sensu allows users to define custom logic that access these custom
-attributes.
+structure. Sensu allows users to define custom logic expressions that can
+access these custom attributes.
 
 ## Proposal
 
@@ -47,7 +53,7 @@ Another library we can utilize is `jsoniterator`, which lets users arbitrarily
 iterate through JSON data structures instead of unmarshalling in a single shot.
 
 By combining these two libraries, we can implement a custom unmarshaler and
-marshaler for any data types that want to use custom attributes.
+marshaler for any data types that want to use extended attributes.
 
 ## Reflection-based encoding and decoding helpers
 
@@ -56,7 +62,7 @@ implementers. I've included a complete, somewhat-tested proof-of-concept
 here: https://github.com/sensu/sensu-go/pull/599
 
 TODO:
-1. Support querying nested custom attribute structures. (Done.)
+1. Support querying nested extended attribute structures. (Done.)
 1. Optimize the code by reducing reflection and parsing as much as possible.
 (Not yet attempted.)
 1. Better naming. (Somewhat done.)
@@ -107,6 +113,6 @@ This feature is necessary to facilitate 1.x parity.
 ## Implementation
 
 1. Implement a library for dealing with marshaling and unmarshaling data types
-with custom attributes. Make sure the library handles govaluate integration.
+with extended attributes. Make sure the library handles govaluate integration.
 1. Make use of the library in the Check data type.
 1. Make use of the library in the Environment data type.
