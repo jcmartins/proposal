@@ -8,12 +8,12 @@ Discussion at https://github.com/sensu/sensu-go/issues/586
 
 ## Abstract
 
-Allow users to set extended attributes on selected entities in Sensu, and
-reference these entities in filters and mutators.
+Allow users to set extended attributes on selected resources in Sensu, and
+reference these attributes in filters and mutators.
 
 This proposal uses the word "extended" instead of "custom". This is part of
 the proposal, to change the wording. This way, we can indicate to customers
-that we support the essential feature they want from 1.x, but in a  different
+that we support the essential feature they want from 1.x, but in a different
 way.
 
 
@@ -55,7 +55,7 @@ iterate through JSON data structures instead of unmarshalling in a single shot.
 By combining these two libraries, we can implement a custom unmarshaler and
 marshaler for any data types that want to use extended attributes.
 
-## Reflection-based encoding and decoding helpers
+### Reflection-based encoding and decoding helpers
 
 By writing a few helpers, we can take the brunt of the task away from type
 implementers. I've included a complete, somewhat-tested proof-of-concept
@@ -68,18 +68,13 @@ TODO:
 1. Better naming. (Somewhat done.)
 1. Unit tests. (Done, but could be better.)
 
-## Govaluate
+### Govaluate
 
-The problem with govaluate is that it does not allow accessing nested maps or
-`Parameters` types. There are two potential ways we can solve this issue:
+Govaluate as of this writing does not allow accessing nested maps or
+`Parameters` types. Therefore, we need to fork and fix govaluate to work how we
+would like it to.
 
-1. Fork and fix govaluate. (PR: https://github.com/Knetic/govaluate/pull/84)
-1. Dynamically generate structs from JSON using reflect.
-
-Both solutions will necessitate reflection, and forking govaluate will incur
-additional maintenance overhead, especially if we don't manage to get it merged
-into mainline. Dynamically generating structs works, but forces our users to
-use CamelCase names in order to satisfy the govaluate parser.
+PR: https://github.com/Knetic/govaluate/pull/84
 
 ## Rationale
 
@@ -90,22 +85,10 @@ at runtime in Go.
 1. Code generation and execution out-of-process
 1. Embedded VM, ala lua or v8
 
-I believe that in our case, reflection is probably the design decision that
+In our case, reflection is probably the design decision that
 fits best with the libraries we've already chosen, and would allow us to
 implement a solution without relying on embedding a VM or running things
 outside the main executable's process.
-
-You can see the result of my experiment with the first approach in the PR
-attached above. The unit tests show it is possible to access arbitrary
-nested parameters with govaluate. This is because GetField actually dynamically
-generates a struct to pass to govaluate.
-
-*Dynamically generating structs is a brutal, horrible hack*. It would be better
-to introduce improved support for the govaluate.Parameters interface within
-govaluate, where for some reason it is under-utilized. I suspect that if we can
-improve support for govaluate.Parameters, it won't be necessary to generate a
-struct at all, and rather just return a tree of lazy jsoniter.Any values,
-each of which implements the Parameters interface.
 
 ## Compatibility
 
@@ -113,7 +96,8 @@ This feature is necessary to facilitate 1.x parity.
 
 ## Implementation
 
-1. Implement a library for dealing with marshaling and unmarshaling data types
-with extended attributes. Make sure the library handles govaluate integration.
-1. Make use of the library in the Check data type.
-1. Make use of the library in the Environment data type.
+1. Implement a library for dealing with marshaling and unmarshaling data types with extended attributes. Make sure the library handles govaluate integration. (https://github.com/sensu/sensu-go/issues/586)
+1. Fork and patch govaluate to support nested Parameters. Try to get it merged upstream. (https://github.com/Knetic/govaluate/pull/84)
+1. Make use of the library in the Check data type. (https://github.com/sensu/sensu-go/issues/603)
+1. Make use of the library in the Environment data type. (https://github.com/sensu/sensu-go/issues/604)
+1. Add support for setting extended attributes in the CLI for Check and Environment. (https://github.com/sensu/sensu-go/issues/458)
