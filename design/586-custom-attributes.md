@@ -100,4 +100,5 @@ This feature is necessary to facilitate 1.x parity.
 1. Fork and patch govaluate to support nested Parameters. Try to get it merged upstream. (https://github.com/Knetic/govaluate/pull/84)
 1. Make use of the library in the Check data type. (https://github.com/sensu/sensu-go/issues/603)
 1. Make use of the library in the Environment data type. (https://github.com/sensu/sensu-go/issues/604)
+1. Add support for setting ExtendedAttributes. (https://github.com/sensu/sensu-go/issues/607)
 1. Add support for setting extended attributes in the CLI for Check and Environment. (https://github.com/sensu/sensu-go/issues/458)
