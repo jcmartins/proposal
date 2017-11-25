@@ -102,3 +102,7 @@ This feature is necessary to facilitate 1.x parity.
 1. Make use of the library in the Environment data type. (https://github.com/sensu/sensu-go/issues/604)
 1. Add support for setting ExtendedAttributes. (https://github.com/sensu/sensu-go/issues/607)
 1. Add support for setting extended attributes in the CLI for Check and Environment. (https://github.com/sensu/sensu-go/issues/458)
+
+## Bugs
+
+1. https://github.com/sensu/sensu-go/pull/609
