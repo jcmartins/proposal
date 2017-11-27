@@ -20,7 +20,7 @@ implementing changes to the Sensu project.
 
 ### Definitions
 
-- A **proposal** is a suggestion filed as a GitHub issue in the [sensu-go](https://github.com/sensu/sensu-go) 
+- A **proposal** is a suggestion filed as a GitHub issue in the [sensu-go](https://github.com/sensu/sensu-go)
   repository, identified by having the `proposal` label.
 - A **design doc** is the expanded form of a proposal, written when the
   proposal needs more careful explanation and consideration.

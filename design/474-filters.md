@@ -4,7 +4,7 @@ Author(s): Greg Poirier, Sean Porter
 
 Last updated: 2017-10-23
 
-Discussion at https://github.com/sensu/sensu-go/issue/474.
+Discussion at https://github.com/sensu/sensu-go/issues/474.
 
 ## Abstract
 
