@@ -12,7 +12,7 @@ Modify the check hook resource to allow reusability amongst checks, descriptive 
 
 ## Background
 
-Check hooks, although a new feature to 1.x, I believe exist in such a fashion where they are stored in the check configuration scope only. Multiple hooks of the same response code (ex. “non-zero”) do not exist outside of the check that it is instantiated in, and cannot be reused in other checks. The hook’s only identifying factor is its response code, but it is not entirely descriptive to what the action of the hook’s command might invoke.
+Check hooks are not reusable in 1.x, because they lack unique and descriptive identifiers and are only stored within the scope of a check configuration. 1.x Checks are also limited to one hook per severity/response code.
 
 ## Proposal
 
