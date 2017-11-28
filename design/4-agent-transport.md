@@ -36,6 +36,8 @@ Using a simple line protocol over a WebSocket will allow us to provide a Sensu c
 
 The Sensu 2.0 Agent Transport eliminates the need for third party software like RabbitMQ. It is not compatible with Sensu 1.x.
 
+Using Websockets allows us some noteworthy forward compatibility options. The Websocket protocol is independent of the encoding used to communicate between Sensu agent and backend processes. Because Websockets use standard HTTP headers to negotiate their connections, we can allow for multiple versions of the transport to be deployed in a single production installation. This gives Sensu the flexibility to change the encoding used to improve performance in the future.
+
 ## Implementation
 
 [gorilla/websocket](https://github.com/gorilla/websocket) is the underlying library that the Sensu Agent Transport is based on. This library provides WebSocket upgrade and handshake functionality an HTTP session as provided by `net/http` or another HTTP server like `gorilla/mux`.
