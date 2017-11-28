@@ -36,3 +36,7 @@ Discussion at https://github.com/sensu/sensu-go/issues/NNNNN.
 
 [A discussion of issues relating to this proposal for which the author does not
 know the solution. This section may be omitted if there are none.]
+
+## References (if applicable)
+
+[A numbered list of references for citation.]
