@@ -6,21 +6,21 @@ Last updated: 2017-03-15
 
 ## Abstract
 
-The Sensu Agent Transport, the method of communication between Sensu Agents and the Sensu Backends. The transport is capable of traversing complex network topologies while providing end-to-end encryption. It uses the same method of authentication and authorization as Sensu API clients. Connections are initiated by the Sensu Agent, only the Sensu Backend needs to expose a port and listen for connections, reducing the operational overhead and attack surface. The Sensu Agent only needs to maintain its transport connection to one of the available Sensu Backends at a time, but may connect to another in the event of connectivity issues.
+The Sensu Agent Transport is the method of communication between Sensu Agents and the Sensu Backends. It is capable of traversing complex network topologies while providing end-to-end encryption. The same method of authentication and authorization is used as Sensu API clients. Connections are initiated by the Sensu Agent, only the Sensu Backend needs to expose a port and listen for connections, reducing the operational overhead and attack surface. The Sensu Agent only needs to maintain its transport connection to one of the available Sensu Backends at a time, but may connect to another in the event of connectivity issues.
 
 ## Background
 
-The next generation of Sensu must retain the transport and messaging functionality available in the current version of Sensu. The functionality includes end-to-end encryption, user authentication and authorization, high availability, and message routing (i.e. publish/subscribe topics).
+The next generation of Sensu must retain the transport and messaging functionality available in the current version of Sensu. This includes end-to-end encryption, user authentication and authorization, high availability, and message routing (i.e. publish/subscribe topics).
 
 Today, Sensu leverages third party software, such as RabbitMQ, to provide secure connectivity and messaging between Sensu components. Unfortunately, third party software (e.g. RabbitMQ) introduces a significant barrier to entry, operational burden, and potential security vulnerabilities. Users are expected to have the knowledge and experience necessary to deploy, secure, and scale the third party software. In order to address this problem, Sensu Inc. provides training courses and materials for specific third party software within the scope of a Sensu installation, namely RabbitMQ and Redis. Although training is available, a good majority of bugs and support tickets filed are still due to third party software issues and difficulties operating it.
 
-One of the primary drivers behind Sensu 2.0, the next generation of Sensu, is reducing Sensu's operational overhead. Today, the transport represents the largest source of friction for new users and operational overhead in production environments.
+One of the primary drivers behind Sensu 2.0, the next generation of Sensu, is reducing Sensu's operational overhead. Today, the transport represents the largest source of such friction for new users in their production environments.
 
 ## Proposal
 
-Use a simple carriage-return, line-feed delimited JSON protocol, over a WebSocket connection for Sensu Agent to Backend communication. Using a WebSocket allows us to leverage the Sensu API authentication and authorization mechanism, providing full RBACs for Sensu Agent connections. TLS can be used to encrypt communication and x509 certificates can be used to verify the Sensu Agent and Backend peers. Message routing can be implemented within the Sensu Backend process. A Sensu Backend only needs to route messages to its connected Agents, little to no coordination is required between Backends.
+Use a simple carriage-return, line-feed delimited JSON protocol, over a WebSocket connection for Sensu Agent to Backend communication. Using a WebSocket allows us to leverage the Sensu API authentication and authorization mechanism, providing full RBAC for Sensu Agent connections. TLS can be used to encrypt communication and x509 certificates can be used to verify the Sensu Agent and Backend peers' identities. Message routing can be implemented within the Sensu Backend process. A Sensu Backend only needs to route messages to its connected Agents, little to no coordination is required between Backends.
 
-WebSocket abstract: The WebSocket Protocol enables two-way communication between a client running untrusted code in a controlled environment to a remote host that has opted-in to communications from that code. The security model used for this is the origin-based security model commonly used by web browsers. The protocol consists of an opening handshake followed by basic message framing, layered over TCP. The goal of this technology is to provide a mechanism for browser-based applications that need two-way communication with servers that does not rely on opening multiple HTTP connections (e.g., using XMLHttpRequest or <iframe>s and long polling).
+The WebSocket Protocol enables two-way communication between a client running untrusted code in a controlled environment to a remote host that has opted-in to communications from that code. The security model used for this is the origin-based security model commonly used by web browsers. The protocol consists of an opening handshake followed by basic message framing, layered over TCP. The goal of this technology is to provide a mechanism for browser-based applications that need two-way communication with servers that does not rely on opening multiple HTTP connections (e.g., using XMLHttpRequest or IFrames and long polling).
 
 ## Rationale
 
@@ -38,7 +38,7 @@ The Sensu 2.0 Agent Transport eliminates the need for third party software like 
 
 ## Implementation
 
-[gorilla/websocket](https://github.com/gorilla/websocket) is the underlying library that the Sensu Agent transport is based on. This library provides WebSocket upgrade and handshake functionality an HTTP session as provided by `net/http` or another HTTP server like `gorilla/mux`.
+[gorilla/websocket](https://github.com/gorilla/websocket) is the underlying library that the Sensu Agent Transport is based on. This library provides WebSocket upgrade and handshake functionality an HTTP session as provided by `net/http` or another HTTP server like `gorilla/mux`.
 
 There are a few things worth understanding about the behavior of a [Conn](https://godoc.org/github.com/gorilla/websocket#Conn) object. First, it is basically a wrapper around a [net.Conn](https://godoc.org/net#Conn) that handles formatting and framing messages for the Websocket wire protocol as specified in [RFC 6455](https://tools.ietf.org/html/rfc6455). It provides a couple of different methods for sending and receiving messages over the `net.Conn`, but we are primarily concerned with the following four:
 
@@ -51,11 +51,11 @@ You can lookup their documentation fairly easily in the godoc for [gorilla/webso
 
 ### A note about concurrency
 
-First, and foremost, it should be understood (and the gorilla/websocket documentation makes this abundantly clear) that a `Conn` object cannot be used concurrently by multiple goroutines. This will cause a `panic()` and halt the calling goroutine. That's because each or these messages is effectively calling `Read()` and `Write()` directly on the underlying `net.Conn`. Since Websocket is a framed line protocol, you can understand how this would be fairly bad--because the websocket `Conn` object is responsible for ordering and assembling Websocket frames.
+First, and foremost, it should be understood (and the gorilla/websocket documentation makes this abundantly clear) that a `Conn` object cannot be used concurrently by multiple goroutines. This will cause a `panic()` and halt the calling goroutine. Each of these messages is effectively calling `Read()` and `Write()` directly on the underlying `net.Conn`. The Websocket protocol is a framed protocol, and the websocket `Conn` object is responsible for ordering and assembling Websocket frames. Thus, concurrent access breaks any guarantees to consistent framing of messages across the transport.
 
 ### Reading
 
-Reading from the underlying net.Conn is handled by a [bufio.Reader](https://godoc.org/bufio#Reader). When calling `ReadMessage()` or `NextReader()`, the call will block indefinitely until the next message is received. There's not any way of getting around this that does not corrupt the state of the underlying connection. Eventually, the connection will be closed, and the read method should return an error. There might be a temptation to make a call to `SetReadDeadline()` for read attempts, allowing the call to return, this would be a mistake. The websocket `*Conn` does not handle this scenario well at all.
+Reading from the underlying net.Conn is handled by a [bufio.Reader](https://godoc.org/bufio#Reader). When calling `ReadMessage()` or `NextReader()`, the call will block indefinitely until the next message is received. There's no way of getting around this that does not corrupt the state of the underlying connection. Eventually, the connection will be closed, and the read method should return an error. There might be a temptation to make a call to `SetReadDeadline()` for read attempts, allowing the call to return, this would be a mistake. The websocket `*Conn` does not handle this scenario well at all.
 
 ### Writing
 
