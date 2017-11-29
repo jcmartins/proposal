@@ -24,13 +24,21 @@ The WebSocket Protocol enables two-way communication between a client running un
 
 ## Rationale
 
-### Simplicity
+Using a simple line protocol over a WebSocket and implementing message routing in the Sensu Backend allows us to avoid writing a distributed messaging/queuing system. Alternatives to WebSockets which were considered include ZeroMQ, HTTP/2, and gRPC. WebSockets were chosen for a few simple reasons:
 
-Using a simple line protocol over a WebSocket and implementing message routing in the Sensu Backend allows us to avoid writing a distributed messaging/queuing system.
+- They provide the most _exact_ solution desired.
+- They're highly portable.
+- They're well-understood and accessible to the community.
 
-### Community
+The community aspect of this is important, because we want users to be able to write or contribute applications that behave like Sensu Agents. These applications can be put on special purpose devices and custom tailored to work on those devices--rather than deploying the Sensu Agent and any runtimes necessary for running checks on those applications. Special purpose agents are most likely to be seen on network hardware.
 
-Using a simple line protocol over a WebSocket will allow us to provide a Sensu communication library to the community, for custom tooling.
+### Alternatives
+
+ZeroMQ is a protocol framework that allows you to build complex network structures and messaging on top of raw TCP sockets. While extremely flexible, it would have taken considerable development effort to get everything working and would have bound any contributions to the resulting transport framework. Facilitating easier community contributions would require client libraries for the Agent Transport.
+
+HTTP/2 suffers a similar issue. While HTTP/2 is a bidirectional streaming protocol, its streams weren't originally intended for streaming multiple messages. They can be thought of as a bin in which to write multi-frame segments of data. For example, if you wanted to stream multiple images concurrently from a web server, you would chunk each image into multiple frames and send them concurrently across multiple streams. From a language perspective, in Go, an HTTP/2 client isn't particularly different from an HTTP/1.1 client--with the exception that it uses the HTTP/2 transport--allowing HTTP Push and a other HTTP/2 features. WebSockets also make it easier for Sensu Agents and Sensu Backends to push arbitrary data to each other without establishing a bidirectional streaming protocol _on top of_ HTTP/2.
+
+An example of such a protocol would be gRPC Streams. While gRPC is not itself a streaming protocol, a gRPC request could be used to establish a bidirectional stream between Sensu Agents and the Sensu Backend. Ultimately, we chose with WebSockets instead of gRPC because gRPC is a framework for building client libraries and it may introduce a significant barrier to entry for contributions requiring the use of the Sensu Agent Transport. With WebSockets, even if we choose to migrate to an encoding other than JSON, we can still easily support the JSON line protocol for special purpose agents that community members write or contribute.
 
 ## Compatibility
 
