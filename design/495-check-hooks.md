@@ -49,10 +49,13 @@ Reform the check hook resource in such a way that it contains a name descriptive
             “command”: “check-process.rb -p nginx”,
             “subscribers”: [“proxy”],
             “interval”: 30,
-            “hooks”: {
+            "check_hooks": [
+            {
                 “critical”: [“nginx-start”, “another-critical-hook??”],
+            },
+            {
                 "non-zero”: [“ps-aux”],
-            }
+            }],
         }
     }
 }
