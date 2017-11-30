@@ -90,4 +90,6 @@ This will be implemented as part of https://github.com/sensu/sensu-go/issues/495
 
 ## Open issues (if applicable)
 
-None that I can think of.
+https://github.com/sensu/sensu-go/issues/495
+https://github.com/sensu/sensu-go/issues/643
+https://github.com/sensu/sensu-go/issues/645
