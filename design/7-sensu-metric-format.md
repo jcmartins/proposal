@@ -16,7 +16,7 @@ Sensu 1.x was designed and optimized for service checks. Some metric data was ex
 
 ## Proposal
 
-Create a Sensu Metric Format for defining one or more metric points. Use the format when transporting metrics with Sensu Events. Using a single metric format within Sensu allows for performance optimization. Sensu Event Mutator and Handler authors only need to concern themselves with a single metric format.
+Create a Sensu Metric Format for defining one or more metric points. Use the format when transporting metrics within Sensu Events. Using a single metric format within Sensu allows for performance optimization. Sensu Event Mutator and Handler authors only need to concern themselves with a single metric format.
 
 ## Rationale
 
@@ -24,7 +24,7 @@ Create a Sensu Metric Format for defining one or more metric points. Use the for
 
 ## Compatibility
 
-[A discussion of the change with regard to the [Compatibility](https://github.com/sensu/proposal/#compatibility) section of the README.]
+Given the Sensu 2.0 Event still contains Check output, users can still push metrics through Sensu using the same method used in 1.x. However, there is an issue with this is, as the Sensu 2.0 Event does not provide an attribute to indicate that the Check output contains metric data (1.x used check `"type": "metric"`). Currently, the Backend inspects Event "Metrics" to determine if there are metric points to go through the Event pipeline. This needs a proposal.
 
 ## Implementation
 
@@ -50,7 +50,7 @@ The UTC date and time, a Unix nanosecond timestamp, associated with the metric p
 
 ### Examples
 
-Note: I have only used JSON to represent the Sensu Metric Format in this example. The actual implementation is likely a Go slice & struct.
+Note: I have only used JSON to represent the Sensu Metric Format in this particular example. The actual implementation is likely a Go slice & struct.
 
 ```
 [
@@ -93,5 +93,4 @@ cpu_usage.idle host=server01,region=us-west-1,cpu=1 73.6 1512684071
 
 ## Open issues (if applicable)
 
-[A discussion of issues relating to this proposal for which the author does not
-know the solution. This section may be omitted if there are none.]
+https://github.com/sensu/sensu-go/issues/7
