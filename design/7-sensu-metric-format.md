@@ -16,6 +16,18 @@ Sensu 1.x was designed and optimized for service checks. Some metric data was ex
 
 ## Proposal
 
+Create a Sensu Metric Format for defining one or more metric points. Use the format when transporting metrics with Sensu Events.
+
+## Rationale
+
+[A discussion of alternate approaches and the trade offs, advantages, and disadvantages of the specified approach.]
+
+## Compatibility
+
+[A discussion of the change with regard to the [Compatibility](https://github.com/sensu/proposal/#compatibility) section of the README.]
+
+## Implementation
+
 A metric format capable of representing one or more metric points. The metric data can originate from a variety of metric tools and formats.
 
 Each metric point has a name, tag set, field set, and timestamp.
@@ -78,18 +90,6 @@ cpu_usage.user host=server01,region=us-west-1,cpu=1 24.8 1512684071
 cpu_usage.system host=server01,region=us-west-1,cpu=1 0.5 1512684071
 cpu_usage.idle host=server01,region=us-west-1,cpu=1 73.6 1512684071
 ```
-
-## Rationale
-
-[A discussion of alternate approaches and the trade offs, advantages, and disadvantages of the specified approach.]
-
-## Compatibility
-
-[A discussion of the change with regard to the [Compatibility](https://github.com/sensu/proposal/#compatibility) section of the README.]
-
-## Implementation
-
-[A description of the steps in the implementation, who will do them, and when.
 
 ## Open issues (if applicable)
 
