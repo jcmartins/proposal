@@ -22,7 +22,7 @@ Create a Sensu Metric Format for defining one or more metric points. Use the for
 
 ### Use Metrics 2.0
 
-Instead of defining an new metric format, Sensu 2.0 could use [Metrics 2.0](http://metrics20.org/), "an emerging set of conventions, standards and concepts around timeseries metrics metadata". While the idea of a common modern format is great, the collaboration on and adoption of the [spec](http://metrics20.org/spec/) does not seem to be there.
+Instead of defining an new metric format, Sensu 2.0 could use [Metrics 2.0](http://metrics20.org/), "an emerging set of conventions, standards and concepts around timeseries metrics metadata". While the idea of a common modern format is great, the collaboration on and adoption of the [spec](http://metrics20.org/spec/) does not seem to be there. The flat map of tags is not ideal, there is no indication of the nature of a tag (describer or value?).
 
 ### Do Nothing
 
