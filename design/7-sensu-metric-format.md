@@ -65,7 +65,7 @@ Note: I have only used JSON to represent the Sensu Metric Format in this particu
     "tags": {
       "host": "server01",
       "region": "us-west-1",
-      "cpu": 1
+      "cpu": "1"
     },
     "fields": {
       "user": 24.8,
@@ -95,6 +95,12 @@ The metric name and fields combine to produce multiple metric points that share 
 cpu_usage.user host=server01,region=us-west-1,cpu=1 24.8 1512684071
 cpu_usage.system host=server01,region=us-west-1,cpu=1 0.5 1512684071
 cpu_usage.idle host=server01,region=us-west-1,cpu=1 73.6 1512684071
+```
+
+InfluxDB equivalent:
+
+```
+cpu_usage,host=server01,region=us-west-1,cpu=1 user=24.8,system=0.5,idle=73.6 1512684071469000000'
 ```
 
 ## Open issues (if applicable)
