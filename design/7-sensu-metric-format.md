@@ -12,15 +12,21 @@ The Sensu Metric Format is a data structure for defining one or more metric poin
 
 ## Background
 
-Sensu 1.x was designed and optimized for service checks. Some metric data was expected within service check execution output (e.g. Nagios PerfData), Sensu event mutators and handlers were expected to transform and send the data to a TSDB (e.g. Graphite). As Sensu adoption grew, it quickly became apparent that users wanted to use Sensu for metric collection. The community created tooling with a focus on metric collection and delivery with Sensu, such as WizardVan (authored by Greg Poirier), which improved Sensu's capabilities. While many users are very successful in using Sensu for metric collection, there remains room for improvement in regards to the user experience and performance.
+Sensu 1.x was designed and optimized for service checks. Some metric data was expected within service check execution output (e.g. Nagios PerfData), Sensu event mutators and handlers were expected to transform and send the data to a TSDB (e.g. Graphite). As Sensu adoption grew, it quickly became apparent that users wanted to use Sensu for metric collection. The community created tooling with a focus on metric collection and delivery with Sensu, such as WizardVan (authored by Greg Poirier), which improved Sensu's capabilities. While many users are very successful in using Sensu 1.x for metric collection, there remains room for improvement in regards to the user experience and performance.
 
 ## Proposal
 
-Create a Sensu Metric Format for defining one or more metric points. Use the format when transporting metrics within Sensu Events. Using a single metric format within Sensu allows for performance optimization. Sensu Event Mutator and Handler authors only need to concern themselves with a single metric format.
+Create a Sensu Metric Format for defining one or more metric points. Use the format when transporting metrics within Sensu Events. Using a single metric format within Sensu enables data validation and performance optimization. Sensu Event Mutator and Handler authors only need to concern themselves with a single metric format (consistency!). Having a defined metric format enables instrumentation libaries to create and send Sensu Events containing one or more metric points to a Sensu Events API. This makes metrics first-class.
 
 ## Rationale
 
-[A discussion of alternate approaches and the trade offs, advantages, and disadvantages of the specified approach.]
+### Use Metrics 2.0
+
+Instead of defining an new metric format, Sensu 2.0 could use [Metrics 2.0](http://metrics20.org/), "an emerging set of conventions, standards and concepts around timeseries metrics metadata". While the idea of a common modern format is great, the collaboration on and adoption of the [spec](http://metrics20.org/spec/) does not seem to be there.
+
+### Do Nothing
+
+Not implementing a metric format would force users to push metrics through Sensu using Event Check output.
 
 ## Compatibility
 
