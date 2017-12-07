@@ -16,7 +16,7 @@ Sensu 1.x was designed and optimized for service checks. Some metric data was ex
 
 ## Proposal
 
-Create a Sensu Metric Format for defining one or more metric points. Use the format when transporting metrics with Sensu Events.
+Create a Sensu Metric Format for defining one or more metric points. Use the format when transporting metrics with Sensu Events. Using a single metric format within Sensu allows for performance optimization. Sensu Event Mutator and Handler authors only need to concern themselves with a single metric format.
 
 ## Rationale
 
