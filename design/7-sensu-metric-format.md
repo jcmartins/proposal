@@ -157,6 +157,41 @@ In the Sensu Metric Format:
 ]
 ```
 
+The OpenTSDB format allows for better tag extraction.
+
+```
+cpu_usage.user host=server01,region=us-west-1,cpu=1 24.8 1512684071
+```
+
+```
+[
+  {
+    "name": "cpu_usage.user",
+    "tags": [
+      {
+        "name": "host",
+        "value": "server01"
+      },
+      {
+        "name": "region",
+        "value": "us-west-1"
+      },
+      {
+        "name": "cpu",
+        "value": "1"
+      }
+    ],
+    "fields": [
+      {
+        "name": "value",
+        "value": 24.8
+      }
+    ],
+    "timestamp": 1512684071469000000
+  }
+]
+```
+
 ## Open issues (if applicable)
 
 https://github.com/sensu/sensu-go/issues/7
