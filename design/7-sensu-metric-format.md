@@ -62,16 +62,34 @@ Note: I have only used JSON to represent the Sensu Metric Format in this particu
 [
   {
     "name": "cpu_usage",
-    "tags": {
-      "host": "server01",
-      "region": "us-west-1",
-      "cpu": "1"
-    },
-    "fields": {
-      "user": 24.8,
-      "system": 0.5,
-      "idle": 73.6
-    },
+    "tags": [
+      {
+        "name": "host",
+        "value": "server01"
+      },
+      {
+        "name": "region",
+        "value": "us-west-1"
+      },
+      {
+        "name": "cpu",
+        "value": "1"
+      }
+    ],
+    "fields": [
+      {
+        "name": "user",
+        "value": 24.8
+      },
+      {
+        "name": "system",
+        "value": 0.5
+      },
+      {
+        "name": "idle",
+        "value": 73.6
+      }
+    ],
     "timestamp": 1512684071469000000
   }
 ]
