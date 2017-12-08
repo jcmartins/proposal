@@ -24,6 +24,21 @@ Create a Sensu Metric Format for defining one or more metric points. Use the for
 
 Instead of defining an new metric format, Sensu 2.0 could use [Metrics 2.0](http://metrics20.org/), "an emerging set of conventions, standards and concepts around timeseries metrics metadata". While the goal and idea of a common modern format is fantastic, the collaboration on and adoption of the [spec](http://metrics20.org/spec/) does not seem to be there. The flat map of tags is not ideal, there is no indication of the nature of a tag (describer or value?).
 
+### Use InfluxDB
+
+The InfluxDB metric data model is an option, the format is capable of defining one or more measurements, with each measurement representing one or more metric points. Each measurement has a name, tags, fields, and timestamp. This format exchanges "value" for "fields", key/value pairs (string=float) for metric data (e.g. value=0.5, user=24.8, temperature=56.5). Using this format would enable Sensu to fully support and utilize the InfluxDB metric data model.
+
+Pros:
+
+- Fully support the InfluxDB data model
+- Multiple data points that share a common set of tags (efficiency)
+
+Cons:
+
+- Requires more explanation
+- Potentially more difficult to translate to and from
+- Fields may be excessive in many cases
+
 ### Do Nothing
 
 Not implementing a metric format would force users to push metrics through Sensu using Event Check output.
