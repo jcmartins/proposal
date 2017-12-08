@@ -1,0 +1,36 @@
+# Proposal: Agent Statsd Listener
+
+Author(s): Sean Porter
+
+Last updated: 2017-12-07
+
+Discussion at https://github.com/sensu/sensu-go/issues/85.
+
+## Abstract
+
+The Sensu Agent provides a Statsd implementation, which listens for statistics, like counters and timers, sent over UDP or TCP. The Agent Statsd implementation creates Sensu Events, containing metric aggregates, and transports them to a Sensu Backend. 
+
+## Background
+
+[An introduction of the necessary background and the problem being solved by the proposed change.]
+
+## Proposal
+
+[A precise statement of the proposed change.]
+
+## Rationale
+
+[A discussion of alternate approaches and the trade offs, advantages, and disadvantages of the specified approach.]
+
+## Compatibility
+
+[A discussion of the change with regard to the [Compatibility](https://github.com/sensu/proposal/#compatibility) section of the README.]
+
+## Implementation
+
+[A description of the steps in the implementation, who will do them, and when.
+
+## Open issues (if applicable)
+
+[A discussion of issues relating to this proposal for which the author does not
+know the solution. This section may be omitted if there are none.]
