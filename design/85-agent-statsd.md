@@ -2,7 +2,7 @@
 
 Author(s): Sean Porter
 
-Last updated: 2017-12-07
+Last updated: 2017-12-08
 
 Discussion at https://github.com/sensu/sensu-go/issues/85.
 
