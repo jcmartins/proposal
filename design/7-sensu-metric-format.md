@@ -129,6 +129,34 @@ cpu_usage.system{host="server01", region="us-west-1", cpu="1"} 0.5
 cpu_usage.idle{host="server01", region="us-west-1", cpu="1"} 73.6
 ```
 
+### Transforming Formats
+
+Some metric formats make it difficult (or impossible) to extract tags and fields, particularly the Graphite plaintext format.
+
+For example, without understanding exactly what each Graphite metric name segment represents, the metric name (cpu_usage), the tags (server01, us-west-1, cpu1), and the fields (user) cannot be extracted confidently.
+
+```
+us-west-1.server01.cpu_usage.cpu1.user 24.8 1512684071
+```
+
+In the Sensu Metric Format:
+
+```
+[
+  {
+    "name": "us-west-1.server01.cpu_usage.cpu1.user",
+    "tags": [],
+    "fields": [
+      {
+        "name": "value",
+        "value": 24.8
+      }
+    ],
+    "timestamp": 1512684071469000000
+  }
+]
+```
+
 ## Open issues (if applicable)
 
 https://github.com/sensu/sensu-go/issues/7
