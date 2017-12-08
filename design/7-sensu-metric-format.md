@@ -48,7 +48,7 @@ Tags are key/value pairs (string=string) for metric metadata (e.g. host=server01
 
 ### Field Set
 
-Fields are key/value pairs (string=float) for metric values (e.g. user=24.8, system=0.5, idle=73.6)
+Fields are key/value pairs (string=float) for metric values (e.g. user=24.8, system=0.5, idle=73.6).
 
 ### Timestamp
 
