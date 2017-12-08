@@ -103,8 +103,6 @@ Note: I have only used JSON to represent the Sensu Metric Format in this particu
 
 Graphite equivalent:
 
-The metric name and tags combine to produce the Graphite metric path.
-
 ```
 us-west-1.server01.cpu1.cpu_usage.user 24.8 1512684071
 us-west-1.server01.cpu1.cpu_usage.system 0.5 1512684071
@@ -135,7 +133,7 @@ cpu_usage.system{host="server01", region="us-west-1", cpu="1"} 0.5
 
 Some metric formats make it difficult (or impossible) to extract tags, particularly the Graphite plaintext format.
 
-For example, without understanding exactly what each Graphite metric name segment represents, the metric name (cpu_usage.user), and the tags (server01, us-west-1, cpu1) cannot be extracted confidently.
+For example, without understanding exactly what each Graphite metric path segment represents, the metric name (cpu_usage.user), and the tags (server01, us-west-1, cpu1) cannot be extracted confidently.
 
 ```
 us-west-1.server01.cpu1.cpu_usage.user 24.8 1512684071
