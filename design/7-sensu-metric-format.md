@@ -121,6 +121,14 @@ InfluxDB equivalent:
 cpu_usage,host=server01,region=us-west-1,cpu=1 user=24.8,system=0.5,idle=73.6 1512684071469000000'
 ```
 
+Prometheus equivalent:
+
+```
+cpu_usage.user{host="server01", region="us-west-1", cpu="1"} 24.8
+cpu_usage.system{host="server01", region="us-west-1", cpu="1"} 0.5
+cpu_usage.idle{host="server01", region="us-west-1", cpu="1"} 73.6
+```
+
 ## Open issues (if applicable)
 
 https://github.com/sensu/sensu-go/issues/7
