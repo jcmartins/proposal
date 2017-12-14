@@ -30,7 +30,7 @@ A built-in StatsD implementation with protocol extensions would allow users to l
 
 ## Implementation
 
-Add a StatsD implementation to the Sensu 2.0 Agent. Extend to the protocol to support tags. Create Sensu Events containing the produced metrics, using the [Sensu Metric Format](7-sensu-metric-format.md) to define them (e.g. `Event.Metrics.Data=[]`). Provide a means of configuring which Event Handlers the Events are sent to, for example, a Sensu Agent CLI argument to specify one or more Handlers `-statsd-event-handler=influxdb -statsd-event-handler=graphite` which sets the value of `Event.Metrics.Handlers=[]`. There may be some implementation overlap with [Check output metric extraction](https://github.com/sensu/sensu-go/issues/745).
+Add a StatsD implementation to the Sensu 2.0 Agent, a new and separate TCP/UDP listener. Extend to the protocol to support tags. Create Sensu Events containing the produced metrics, using the [Sensu Metric Format](7-sensu-metric-format.md) to define them (e.g. `Event.Metrics.Data=[]`). Provide a means of configuring which Event Handlers the Events are sent to, for example, a Sensu Agent CLI argument to specify one or more Handlers `-statsd-event-handler=influxdb -statsd-event-handler=graphite` which sets the value of `Event.Metrics.Handlers=[]`. There may be some implementation overlap with [Check output metric extraction](https://github.com/sensu/sensu-go/issues/745).
 
 The following StatsD implementations may be of some help.
 
