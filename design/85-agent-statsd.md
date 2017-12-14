@@ -22,9 +22,7 @@ Provide a StatsD implementation in the Sensu 2.0 Agent. Supporting the StatsD pr
 
 ## Rationale
 
-### Use Agent Events API
-
-The Sensu 2.0 Agent provides an Events HTTP API. Users to use this API to create Sensu Events containing metrics. User applications would need Sensu Event specific instrumentation in order to accomplish this. StatsD provides several metric types and aggregation capabilities, the instrumentation would need to reimplement this functionality in order to achieve feature parity. Some things would still not be possible, such as a centralized metric counter or aggregate for more than one application instance.
+The Sensu 2.0 Agent provides an Events HTTP API. Users can use this API to create Sensu Events containing metrics. User applications would need Sensu Event specific instrumentation in order to accomplish this. StatsD provides several metric types and aggregation capabilities, the instrumentation would need to reimplement this functionality in order to achieve feature parity. Some things would still not be possible, such as a centralized metric counter or aggregate for more than one application instance.
 
 ## Compatibility
 
@@ -32,7 +30,7 @@ A built-in StatsD implementation with protocol extensions would allow users to l
 
 ## Implementation
 
-Add a StatsD implementation to the Sensu 2.0 Agent. Extend to the protocol to support tags. Create Sensu Events containing the produced metrics, using the [Sensu Metric Format](7-sensu-metric-format.md) to define them. Provide a means of configuring which Event handler the Events are sent to (TBD - currently no way of specifying this for Event Metrics).
+Add a StatsD implementation to the Sensu 2.0 Agent. Extend to the protocol to support tags. Create Sensu Events containing the produced metrics, using the [Sensu Metric Format](7-sensu-metric-format.md) to define them (e.g. `Event.Metrics.Data=[]`). Provide a means of configuring which Event Handlers the Events are sent to, for example, a Sensu Agent CLI argument to specify one or more Handlers `-statsd-event-handler=influxdb -statsd-event-handler=graphite` which sets the value of `Event.Metrics.Handlers=[]`. There may be some implementation overlap with [Check output metric extraction](https://github.com/sensu/sensu-go/issues/745).
 
 The following StatsD implementations may be of some help.
 
