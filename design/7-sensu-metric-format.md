@@ -45,7 +45,7 @@ Not implementing a metric format would force users to push metrics through Sensu
 
 ## Compatibility
 
-Given the Sensu 2.0 Event still contains Check output, users can still push metrics through Sensu using the same method used in 1.x. However, there is an issue with this, as the Sensu 2.0 Event does not provide an attribute to indicate that the Check output contains metric data (1.x used check `"type": "metric"`). Currently, the Backend inspects Event "Metrics" to determine if there are metric points to go through the Event pipeline. This attribute would need a proposal.
+Given the Sensu 2.0 Event still contains Check output, users can still push metrics through Sensu using the same method used in 1.x. However, there is an issue with this, as the Sensu 2.0 Event does not provide an attribute to indicate that the Check output contains metric data (1.x used check `"type": "metric"`). Currently, the Backend inspects Event "Metrics" to determine if there are metric points to go through the Event pipeline. This attribute would need a proposal. A GitHub issue has been filed for this, [Check output metric extraction](https://github.com/sensu/sensu-go/issues/745).
 
 ## Implementation
 
