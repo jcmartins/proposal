@@ -74,7 +74,9 @@ definitively require a PoC.
 
 The only other approach I can see to this problem would be to misuse the
 `string.Replace` function or the `regexp` package in conjunction with the
-dynamic package but I'm not even sure that would work.
+dynamic package but I'm not even sure that would work. Additionally, it would
+require an enormous amount of work to catch all edge cases that the template
+package has already considered in their parsing.
 
 ## Compatibility
 
