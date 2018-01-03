@@ -2,7 +2,7 @@
 
 Author(s): Simon Plourde
 
-Last updated: 2017-12-08
+Last updated: 2018-01-03
 
 Discussion at https://github.com/sensu/sensu-go/issues/583.
 
@@ -66,9 +66,9 @@ Template.
 
 #### Custom attributes in tokens
 
-This is currently a big unknown and I'm not entirely sure how we can support
-that, but I assume there's something we can do with template functions. It would
-definitively require a PoC.
+A [PoC](https://github.com/sensu/sensu-go/issues/757) has been successfully
+completed in order to determine if it would be possible to support that use
+case.
 
 ## Rationale
 
@@ -87,11 +87,8 @@ easily be achievable even if we kept the same syntax.
 
 ## Implementation
 
-Issues to be created upon approval:
-
-1. Proof of concept with custom attributes.
-2. Create an utility for token substitution.
-3. Implement token substitution in the agent.
-4. Implement token substitution default values.
-5. Implement unmatched tokens support.
-6. Implement custom attributes support.
+1. Proof of concept with custom attributes. (https://github.com/sensu/sensu-go/issues/757)
+2. Implement basic token substitution in the agent. (https://github.com/sensu/sensu-go/issues/785)
+3. Implement default values for token substitution. (https://github.com/sensu/sensu-go/issues/786)
+4. Implement unmatched tokens support. (https://github.com/sensu/sensu-go/issues/787)
+5. Implement custom attributes support. (https://github.com/sensu/sensu-go/issues/788)
