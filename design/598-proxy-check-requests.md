@@ -13,7 +13,7 @@ Use govaluate statements to filter entities when issuing proxy check requests.
 ## Background
 
 Sensu 1.x uses a hash of `client_attributes` in order to match clients to these
-attributes:
+attributes, which also support the `eval` function:
 
 ```
 {
@@ -24,7 +24,8 @@ attributes:
         "client_attributes": {
           "keepalives": false,
           "device_type": "router",
-          "device_manufacturer": "arista"
+          "device_manufacturer": "arista",
+          "subscriptions": "eval: value.include?('dc-01')"
         }
       }
     }
@@ -50,6 +51,7 @@ list of govaluate statements, similar to what Filters do in Sensu 2.x:
           "entity.Keepalives == false",
           "entity.DeviceType == \"router\"",
           "entity.DeviceManufacturer == \"arista\"",
+          "\"dc-01\" in entity.Subscriptions"
         ]
       }
     }
@@ -77,4 +79,8 @@ subjective and I don't believe we have empirical evidence to support that.
 This proposal would be implemented through
 https://github.com/sensu/sensu-go/issues/899, which is already in progress (I
 have a working proof-of-concept using govaluate).
+
+We already had in mind to (support
+govaluate)[https://github.com/sensu/sensu-go/issues/900] but this proposal would
+make govaluate expressions the standard.
 
