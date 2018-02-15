@@ -8,7 +8,7 @@ Discussion at https://github.com/sensu/sensu-go/pull/1002
 
 ## Abstract
 
-Move the fixed event pipeline filtering logic into built-in named filters, e.g. "is_incident". An event handler will receive every event unless it uses one or more event filters (built-in and/or custom), e.g. `["is_incident", "not_silenced"]. No default filtering logic and built-in filters allow for the complete control of the event pipeline, eliminating the inconsistent and restrictive behaviours of the current event pipeline.
+Move the fixed event pipeline filtering logic into built-in named filters, e.g. "is_incident". An event handler will receive every event unless it uses one or more event filters (built-in and/or custom), e.g. `["is_incident", "not_silenced"]`. No default filtering logic and built-in filters allow for the complete control of the event pipeline, eliminating the inconsistent and restrictive behaviours of the current event pipeline.
 
 ## Background
 
