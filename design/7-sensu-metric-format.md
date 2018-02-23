@@ -167,10 +167,18 @@ In the Sensu Metric Format:
 ]
 ```
 
-The OpenTSDB format allows for better tag extraction.
+The OpenTSDB and InfluxDB format allows for better tag extraction.
 
+
+OpenTSDB
 ```
 cpu_usage.user host=server01,region=us-west-1,cpu=1 24.8 1512684071
+```
+
+InfluxDB:
+```
+cpu_usage.user,host=server01,region=us-west-1,cpu=1 value=24.8 1512684071469000000
+
 ```
 
 ```
